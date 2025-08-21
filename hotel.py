@@ -24,4 +24,5 @@ print("Итоговое состояние бронирования мест")
 for  i , (seat, status) in enumerate(seats.items()):
     print(f"{i}.  {seat}: {status}")
     
+print("Программа завершена" )
 
