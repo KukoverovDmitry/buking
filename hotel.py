@@ -18,24 +18,23 @@ def book_seats(event=None):
     except KeyError:
         print(f" Место {s} не существует")
         return book_seats(seats)
+
+def cancel_seats(event=None):
+    s = cancel_entry.get() #input("Введите место для бронирования (от Б1 до Б9)")
+    try:
+        if seats[s] == "забронировано":
+            seats[s] = "свободно"
+            update_canvas()
+            mb.showinfo(title="Успешно", message=   f"Место {s} успешно отмененана бронь")
+               
+        else:
+            mb.showinfo(title=f"Место", message=f"  {s} уже забронировано или не существует")
+                        
+    except KeyError:
+        print(f" Место {s} не существует")
+        return book_seats(seats)
     
-       
-        
-
-
-
 seats = {f"Б{i}": "свободно" for i in range (1,10)}
-#print(seats)
-
-# while True:
-#     book_seats(seats)
-#     booking = input("Хотите еще одно место забронировать? (да/нет)")
-#     if booking.lower() != "да":
-#         break
-
-# print("Итоговое состояние бронирования мест")
-# for  i , (seat, status) in enumerate(seats.items()):
-#     print(f"{i+1}.  {seat}: {status}")
 
 def update_canvas():
     canvas.delete("all")
@@ -53,18 +52,38 @@ def update_canvas():
 
 window = Tk()
 window.title("Бронирование мест")
-window.geometry("400x200")
+window.geometry("500x400")
+
 
 canvas = Canvas(window, width=400, height=80   )
 canvas.pack()
-seats = {f"Б{i}": "свободно" for i in range (1,10)}
+canvas.create_rectangle(20,20,50,50, fill="green")
+canvas.create_text(100, 10, text="Свободно")
+
+canvas2 = Canvas(window, width=400, height=80   )
+canvas2.pack()
+canvas2.create_rectangle(20,20,50,50, fill="red")
+canvas2.create_rectangle(200,20,230,50, fill="green")
+canvas2.create_text(100, 35, text="Свободно", font="Arial 15")
+canvas2.create_text(320, 35, text="Забронировано", font="Arial 15")
+
+
+seats = {f"Б{i}": "свободно" for i in range (1,10)} #создание словаря - места и их статуса
 
 update_canvas()
 
 seat_entry = Entry(window, width=10)
 seat_entry.pack(pady=10)
+seat_entry.focus()
+seat_entry.bind("<Return>", book_seats)
+Button(window, text="Забронировать место", command=lambda: book_seats(seats)).pack(pady=10)
 
-Button(window, text="Забронировать", command=lambda: book_seats(seats)).pack(pady=10)
+cancel_entry = Entry(window, width=10)
+cancel_entry.pack(pady=10)
+cancel_entry.bind("<Return>", cancel_entry)
+
+Button(window, text="Отменить бронь", command=lambda: cancel_seats(seats)).pack(pady=10)
+
 
 window.mainloop()
 
